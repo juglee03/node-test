@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>목표 설정</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <h1 style="margin: 0; text-align: center; flex-grow: 1;">목표 설정</h1>
+        <a href="/" class="button" style="color: #007BFF;"><i class="fa-solid fa-house"></i></a> <!-- 홈버튼 -->
+    </div>
+
+    <div style="background-color: #fff; height: 10vh; display: flex; align-items: center; justify-content: center; margin-bottom: 3vh;">
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <label style="margin-right: 5px;">
+                <input type="radio" name="options" value="" checked>시뮬레이션
+            </label>
+            <label style="margin-right: 5px;">
+                <input type="radio" name="options" value="">자동계산
+            </label>
+            <select id="productSelect" style="margin-right: 5px;">
+                <% for (let i=0; i < materials.length; i++) { %>
+                <option value="<%= materials[i].name %>|<%= materials[i].quantity %>"><%= materials[i].product %></option>
+                <% } %>
+            </select>
+            <input id="productInput" style="margin-right: 5px; text-align: right;" type="number" value="0"
+                max="10000" min="1" placeholder="숫자 입력">
+            <label style="margin-right: 5px;">개</option>
+            <button onclick="settingStart()">설정</button>
+
+            <select id="storagesSelect" style="display: none;">
+            <% for (let i=0; i < storages.length; i++) { %>
+                <option value="<%= storages[i].name %> (거리:<%= storages[i].distance %>)"><%= storages[i].name %></option>
+            <% } %>
+            </select>
+        </div>
+    </div>
+
+    <div style="background-color: #fff; height: 10vh; margin-bottom: 3vh; display: flex; align-items: center; justify-content: center;">
+        <h3 id="targetSet" style="text-align: center; margin: 0;"></h3>
+    </div>
+
+    <div id="simulationDiv" style="background-color: #fff; height: 50vh; display: none;">
+        <div style="flex: 1; background-color: #faf3e0; border: 1px solid #000;">
+            <h5 id="startStorage" style="margin: 0;">시작창고</h5>
+            <h4 id="startH4" onClick="takeMaterial('startH4', 'start1')" class="materialStartQty" style="margin: 0; text-align: center; padding: 10vh; cursor:pointer;">A자재 1000개</h4>
+            <button id="start1" class="importButton" style="margin: auto; display: block;">입고</button>
+        </div>
+
+        <div style="flex: 2; background-color: #faf3e0; border: 1px solid #000; display: flex;">
+            <div style="flex: 1; border-right: 1px solid #000;">
+                <div id="middleStorageDiv1" style="flex: 1; border-bottom: 1px solid #000; height: 50%; display: none;">
+                    <h5 id="middleStorage1" style="margin: 0;">생산창고1</h5>
+                    <h4 id="middleH41" onClick="takeMaterial('middleH41', 'middle1')" class="materialMiddleQty" style="margin: 0; text-align: center; padding: 5vh; cursor:pointer;">A자재 0개</h4>
+                    <button id="middle1" class="importButton" style="margin: auto; display: block;">입고</button>
+                </div>
+                <div id="middleStorageDiv2" style="flex: 1; border-top: 1px solid #000; height: 50%; display: none;">
+                    <h5 id="middleStorage2" style="margin: 0;">생산창고2</h5>
+                    <h4 id="middleH42" onClick="takeMaterial('middleH42', 'middle2')" class="materialMiddleQty" style="margin: 0; text-align: center; padding: 5vh; cursor:pointer;">A자재 0개</h4>
+                    <button id="middle2" class="importButton" style="margin: auto; display: block;">입고</button>
+                </div>
+            </div>
+    
+            <div style="flex: 1; border-left: 1px solid #000;">
+                <div id="middleStorageDiv3" style="flex: 1; border-bottom: 1px solid #000; height: 50%; display: none;">
+                    <h5 id="middleStorage3" style="margin: 0;">생산창고3</h5>
+                    <h4 id="middleH43" onClick="takeMaterial('middleH43', 'middle3')" class="materialMiddleQty" style="margin: 0; text-align: center; padding: 5vh; cursor:pointer;">A자재 0개</h4>
+                    <button id="middle3" class="importButton" style="margin: auto; display: block;">입고</button>
+                </div>
+                <div id="middleStorageDiv4" style="flex: 1; border-top: 1px solid #000; height: 50%; display: none;">
+                    <h5 id="middleStorage4" style="margin: 0;">생산창고4</h5>
+                    <h4 id="middleH44" onClick="takeMaterial('middleH44', 'middle4')" class="materialMiddleQty" style="margin: 0; text-align: center; padding: 5vh; cursor:pointer;">A자재 0개</h4>
+                    <button id="middle4" class="importButton" style="margin: auto; display: block;">입고</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="flex: 1; background-color: #faf3e0; border: 1px solid #000;">
+            <h5 id="lastStorage" style="margin: 0;">종료창고</h5>
+            <h4 id="last1" class="productLastQty" style="margin: 0; text-align: center; padding: 10vh;">A제품 0개</h4>
+            <button class="importButton" style="margin: auto; display: block;">입고</button>
+            <button style="margin: auto; display: block; margin-top: 5px;">종료</button>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    let countTarget = 0;
+    let hourTarget = 0;
+
+    //설정 버튼 클릭시
+    function settingStart() {
+        //0. simulationDiv 활성화
+        $('#simulationDiv').css("display", "flex");
+
+        //1. 목표 설정
+        $('#targetSet').text(`목표: ${$('#productInput').val()}개 | 현재: 0개 0시간`);
+
+        //2. 창고 설정
+        let storagesArray = $("#storagesSelect").find("option").map(function() {
+            return $(this).val();
+        }).get();
+
+        let startStorageVal = storagesArray.filter(function(option) {
+            return option.includes('시작창고');
+        });
+        $('#startStorage').text(startStorageVal[0]);
+
+        let middleStorageVal = storagesArray.filter(function(option) {
+            return option.includes('생산창고');
+        });
+        for(let i = 0; i < middleStorageVal.length; i++) {
+            $(`#middleStorageDiv${i+1}`).css("display", "block");
+            $(`#middleStorage${i+1}`).text(middleStorageVal[i]);
+        }
+
+        let lastStorageVal = storagesArray.filter(function(option) {
+            return option.includes('종료창고');
+        });
+        $('#lastStorage').text(lastStorageVal[0]);
+
+        //3. 자재, 제품 설정
+        const productSelectVal = $('#productSelect').val().split("|");
+        $('.materialStartQty').text(`${productSelectVal[0]} ${productSelectVal[1]}개`);
+        $('.materialMiddleQty').text(`${productSelectVal[0]} 0개`);
+        $('.productLastQty').text(`${$('#productSelect option:selected').text()} 0개`);
+    }
+
+    let materialId = '';
+
+    function takeMaterial(mtrId, btnId){
+        materialId = mtrId;
+        $('.importButton').css('background-color', '#89ABE3');
+        $(`#${btnId}`).css('background-color', '#f0f0f0');
+    }
+    
+</script>
+
+<style>
+    body {
+        font-family: "Noto Sans KR", sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        color: #007BFF;
+        font-size: 24px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    button {
+        background-color: #f0f0f0;
+    }
+</style>
+
+</html>
