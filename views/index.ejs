@@ -10,9 +10,9 @@
 <body>
   <h1>스마트팩토리 창고 자재 이동 프로그램</h1>
   <div>
-    <a href="/page1" class="button">자재 등록</a>
-    <a href="/page2" class="button">창고 등록</a>
-    <a href="/page3" class="button">목표 설정</a>
+    <a href="/page1" class="button" style="width: 30vh; height: 70vh; background-color: #00BFFF;">자재 등록</a>
+    <a href="/page2" class="button" style="width: 35vh; height: 70vh; background-color: #0080FF;">창고 등록</a>
+    <a href="/page3" class="button" style="width: 50vh; height: 70vh; background-color: #0040FF;">목표 설정</a>
   </div>
 </body>
 
@@ -40,10 +40,19 @@
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    box-shadow: 0 0 10px #ccc;
+    transition: all 0.3s ease-in-out;
   }
 
   .button:hover {
     background-color: #0056b3;
+  }
+
+  .button:active {
+    box-shadow: 0 0 5px #ccc;
   }
 </style>
 
