@@ -163,7 +163,7 @@
                 const productSelectVal = $('#productSelect').val().split("|");
                 $('.materialStartQty').text(`${productSelectVal[0]} ${productSelectVal[1]}개`);
                 $('.materialMiddleQty').text(`${productSelectVal[0]} 0개`);
-                $('.productLastQty').text(`${$('#productSelect option:selected').text()} 0개`);
+                $('.productLastQty').text(`${$('#productSelect option:selected').text().trim()} 0개`);
             } else {
                 //0. simulationDiv 활성화
                 $('#simulationDiv').css("display", "none");
@@ -203,16 +203,22 @@
     let storageId = '';
 
     function takeMaterial(mtrId, btnId, srgId) {
-        if ($('#targetSet').css('color') == 'rgb(0, 0, 0)') {
+        let materialCnt = Number($(`#${mtrId}`).text().split(' ')[1].replace(/\D/g, ''));
+        if ( $('#targetSet').css('color') == 'rgb(0, 0, 0)' && materialCnt > 0  ) {
             materialId = mtrId;
             storageId = srgId;
             $('.importButton').css('background-color', '#89ABE3');
+            $('.importButton').css('cursor', 'pointer');
+
             $(`#${btnId}`).css('background-color', '#f0f0f0');
+            $(`#${btnId}`).css('cursor', 'default');
         }
     }
 
+    //입고 버튼 클릭시
     function importFunc(btnId, h4Id, srgId) {
-        if ($(`#${btnId}`).css('background-color') == 'rgb(137, 171, 227)') {
+        let materialCnt = Number($(`#${materialId}`).text().split(' ')[1].replace(/\D/g, ''));
+        if ( $(`#${btnId}`).css('background-color') == 'rgb(137, 171, 227)' && materialCnt > 0 ) {
             let tempText = $(`#${h4Id}`).text();
             $(`#${h4Id}`).text($(`#${materialId}`).text());
             $(`#${materialId}`).text(tempText);
@@ -247,10 +253,10 @@
 
             //2.
             if (countTarget >= productTarget) {
-                $('#targetSet').text(`성공! 목표: ${productTarget}개 | 현재: ${countTarget}개 ${hourTarget}시간`);
+                $('#targetSet').text(`성공! 목표: ${productTarget}개 | 결과: ${countTarget}개 ${hourTarget}시간`);
                 $('#targetSet').css('color', 'blue');
             } else {
-                $('#targetSet').text(`실패... 목표: ${productTarget}개 | 현재: ${countTarget}개 ${hourTarget}시간`);
+                $('#targetSet').text(`실패... 목표: ${productTarget}개 | 결과: ${countTarget}개 ${hourTarget}시간`);
                 $('#targetSet').css('color', 'red');
             }
         }
